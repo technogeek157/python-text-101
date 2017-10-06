@@ -37,9 +37,9 @@ def state_dungeon_03():
     if playerinput == "c":
         currentstate = "chest_03"
     elif playerinput == "d":
-        currentstate = "door_02"
+        currentstate = "door_03"
     elif playerinput == "t":
-        currentstate = "torch_02"
+        currentstate = "torch_03"
     return currentstate
 
 def state_chest_01():
@@ -88,6 +88,16 @@ def state_door_02():
         currentstate = "corridor_02"
     return currentstate
 
+def state_door_03():
+    print("This is a old dungeon door. It appears to be unlocked. \n\n" +
+          "Press C to continue, R to Return\n")
+    playerinput = raw_input()
+    if playerinput == "r":
+        currentstate = "dungeon_03"
+    elif playerinput == "c":
+        currentstate = "corridor_03"
+    return currentstate
+
 def state_torch_01():
     print("This is a torch, it burnes with a orange light, illuminating the room.\n\n" +
           "Press R to Return\n")
@@ -128,6 +138,19 @@ def state_corridor_02():
         currentstate = "grue"
     return currentstate
 
+def state_corridor_03():
+    print("A long corridor stretches before you, there is a door at the end. \n\n" +
+          "Press C to continue, R to Return\n")
+    playerinput = raw_input()
+    if playerinput == "r":
+        currentstate = "dungeon_03"
+    elif playerinput == "c":
+        currentstate = "EOL"
+    return currentstate
+
+def EOL():
+    print("You beat level one!")
+
 def state_grue():
     print("You were eaten by a grue! Tip: Grue's like the dark, so bring a light!\n\n" +
           "Try again? R for Retry\n")
@@ -164,3 +187,9 @@ while True: #main loop, starts functions
         currentstate = state_corridor_02()
     elif currentstate == "chest_03":
         currentstate = state_chest_03()
+    elif currentstate == "door_03":
+        currentstate = door_03()
+    elif currentstate == "corridor_03":
+        currentstate = corridor_03()
+    elif currentstate == "EOL":
+        currentstate = EOL()
