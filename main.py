@@ -188,8 +188,8 @@ while True: #main loop, starts functions
     elif currentstate == "chest_03":
         currentstate = state_chest_03()
     elif currentstate == "door_03":
-        currentstate = door_03()
+        currentstate = state_door_03()
     elif currentstate == "corridor_03":
-        currentstate = corridor_03()
+        currentstate = state_corridor_03()
     elif currentstate == "EOL":
         currentstate = EOL()
