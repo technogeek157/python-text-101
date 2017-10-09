@@ -1,6 +1,9 @@
 global currentstate
 currentstate = "dungeon_01"
-global define
+global keyDict
+global newState
+newState = ""
+keyDict = {}
 
 def state_dungeon_01(): #this is one of the states
     print("You are in a dank dungeon. There are stone walls all around. There is a wooden chest and a lit torch on the wall.\n\n" +
@@ -160,36 +163,18 @@ def state_grue():
         currentstate = "dungeon_01"
     return currentstate
 
-while True: #main loop, starts functions
+def one_room(situation, gotos, keyOne, gotoOne):
+    print(situation + "\n\n" + gotos)
+    playerinput = raw_input()
+    playerinput = playerinput.lower()
+    if playerinput == keyOne:
+        return gotoOne
+    else:
+        return("kpe")
+    
+
+while True:
     if currentstate == "dungeon_01":
-        currentstate = state_dungeon_01()
-    elif currentstate == "chest_01":
-        currentstate = state_chest_01()
-    elif currentstate == "door_01":
-        currentstate = state_door_01()
-    elif currentstate == "torch_01":
-        currentstate = state_torch_01()
-    elif currentstate == "corridor_01":
-        currentstate = state_corridor_01()
-    elif currentstate == "grue":
-        currentstate = state_grue()
-    elif currentstate == "dungeon_02":
-        currentstate = state_dungeon_02()
-    elif currentstate == "chest_02":
-        currentstate = state_chest_02()
-    elif currentstate == "torch_02":
-        currentstate = state_torch_02()
-    elif currentstate == "dungeon_03":
-        currentstate = state_dungeon_03()
-    elif currentstate == "door_02":
-        currentstate = state_door_02()
-    elif currentstate == "corridor_02":
-        currentstate = state_corridor_02()
-    elif currentstate == "chest_03":
-        currentstate = state_chest_03()
-    elif currentstate == "door_03":
-        currentstate = state_door_03()
-    elif currentstate == "corridor_03":
-        currentstate = state_corridor_03()
-    elif currentstate == "EOL":
-        currentstate = EOL()
+        newState = one_room()
+    if newState != "kpe":
+        currentstate = newState
