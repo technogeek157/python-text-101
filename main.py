@@ -1,4 +1,4 @@
-import random, time
+import random, time 
 global currentstate
 global keyDict
 global newState
