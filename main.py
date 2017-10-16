@@ -1,6 +1,5 @@
 import random, time
 global currentstate
-global keyDict
 global newState
 newState = ""
 returnkey = "Press R to Return"
@@ -47,56 +46,49 @@ def three_room(situation, gotos, keyOne, keyTwo, keyThree, gotoOne, gotoTwo, got
 		else:
 			return("kpe")
 			
-def gremlin(description, p, c, level, health):
+def gremlin(description, p, level):
+	global playerHealth, currentstate
 	clear()
-	currentHealth = health
+	currentHealth = playerHealth
 	attackPower = 2
 	fighting = False
 	enemyHealth = 5 * level
 	print ("You have come across a gremlin. " + description + " It has " + 
 	str(enemyHealth) + " health." + "\n\n")
 	print ("Press R to Retreat, A to Attack, you have a " + playerItem + "\n\n")
- 
 	while True:
-	 if enemyHealth == 0:
-	 	print "You killed the monster!"
-	 	return p
-	 
-	 playerinput = raw_input("Your turn.")
-	 playerinput = playerinput.lower()
-	 clear()
-	 
-	 if playerinput == 'r':
-	 	if random.randint(1, 2) == 1:
-	 		print "\nRetreated!"
-	 		time.sleep(3)
-			return c
-		
-		else:
-			print "\nFailed to retreat"
-			
-	 elif playerinput == 'a':
-			if random.randint(1, 2) == 1:
-				print "\nYou hit the monster!"
-				enemyHealth = enemyHealth - 1
-				
-			else:
-				print "\nYou missed."
-				
-	 print "\nYou have " + str(playerHealth) + " health. \nThe monster has " + str(enemyHealth) + " health.\n"
-	 
-	 desicion = random.randint(1,2)
-	 
-	 time.sleep(1)
-	 
-	 if desicion == 1:
-	 	print("The monster hit you.")
-	 	print("You lost " + str(attackPower) + " health.")
-	 	health = health - attackPower
-	 	print("You have " + str(health) + " health.\n\n")
-	 	
-	 else:
-	 	print("The monster missed.")
+	  
+	  playerinput = raw_input()
+	  playerinput = playerinput.lower()
+	  clear()
+	  
+	  if playerHealth <= 0: #player death
+	    print "You lost all of your health."
+	    time.sleep(2)
+	    return "dead"
+	  
+	  elif enemyHealth <=0: #monster death
+	    print "You defeated the monster."
+	    time.sleep(2)
+	    return p
+	    
+	  else:
+	    
+	    if playerinput == a:
+	      
+	    elif playerinput == r: #when players try to retreat
+	      if random.randint(1,2) == 1: #successful retreat
+	        print "Retreat Successful!"
+	        time.sleep(2)
+	        return currentstate
+	      else:
+	        print "Retreat failed."
+	        time.sleep(2)
+	      
+	    else: #when the input is not recognized
+	      print("Keypress Error, please try again")
+	      time.sleep(2)
+	  
 	 	
 playerHealth = 10
 playerItem = 'torch'
@@ -178,7 +170,7 @@ while True:
 			", C to Continue", 'r', 'c', "dungeon_03", "gremlin1")
 			
 		if currentstate == 'gremlin1':
-			newState = gremlin("It is dirty.", 'eol', 'corridor_03', 1, playerHealth)
+			newState = gremlin("It is dirty.", 'eol', 1)
 		
 		#below this line is basic mechanincs
 		
