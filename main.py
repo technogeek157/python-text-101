@@ -4,10 +4,15 @@ global newState
 newState = ""
 returnkey = "Press R to Return"
 chestPoint = False
-global playerHealth, playerItem, pastState
+
+global playerHealth, playerItem, pastState, itemDamage, enemyHealth
 
 def clear():
-    print "\n" * 1000
+	print "\n" * 1000
+
+def status_report(h):
+	print "You have " + str(playerHealth) + ' health.'
+	print "The monster has " + str(h) + " health."
 
 def one_room(situation, gotos, keyOne, gotoOne):
 		clear()
@@ -27,8 +32,10 @@ def two_room(situation, gotos, keyOne, keyTwo, gotoOne, gotoTwo):
 		playerinput = playerinput.lower()
 		if playerinput == keyOne:
 				return gotoOne
+			    
 		elif playerinput == keyTwo:
 			return gotoTwo
+		    
 		else:
 			return("kpe")
 
@@ -47,56 +54,78 @@ def three_room(situation, gotos, keyOne, keyTwo, keyThree, gotoOne, gotoTwo, got
 			return("kpe")
 			
 def gremlin(description, p, level):
-    global playerHealth, currentstate
-    clear()
-    currentHealth = playerHealth
-    attackPower = 2
-    enemyHealth = 5 * level
-    while True:
-        print ("You have come across a gremlin. " + description + " It has " + 
-           str(enemyHealth) + " health." + "\n\n")
-        print ("Press R to Retreat, A to Attack, R to Retreat. You have a " + playerItem + ".")
-        print ("It does " + str(itemDamage) + " damage."  + "\n\n")
-        playerinput = raw_input()
-        playerinput = playerinput.lower()
-        clear()
-	  
-        if playerHealth <= 0: #player death
-            print "You lost all of your health."
-            time.sleep(2)
-            return "dead"
-            
-        elif enemyHealth <=0: #monster death
-            print "You defeated the monster."
-            time.sleep(2)
-            return p
-            
-        else:
-            if playerinput == 'a':
-                clear()
-                if random.randint(1,2) == 1:
-                  print "You hit the monster!\n\n"
-                  
-                else:
-                  print "You missed the monster.\n\n"
-                
-                attacked = True
-                
-            if playerinput == 'r': #retreats
-                if random.randint(1,2) == 1:
-                  print "You were able to retreat!"
-                  time.sleep(2)
-                  return pastState
-                
-                else:
-                  print "Retreat failed."
-                  time.sleep(2)
-                  return currentstate
-                  
-            elif playerinput != 'a' and playerinput != 'r':
-              print "Key not recognized."
-  	  
-	 	
+	global playerHealth, currentstate
+	clear()
+	enemyHealth = 5 * level
+	attackPower = 2 * level
+	while True:
+		if playerHealth <= 0: #player death
+			print "\nYou lost all of your health."
+			time.sleep(2)
+			return "dead"
+			
+		elif enemyHealth <=0: #monster death
+			print "\nYou defeated the monster."
+			time.sleep(2)
+			return p
+
+			
+		else:
+					clear()
+					print ("You have come across a gremlin. " + description + " It has " + str(enemyHealth) + " health." + "\n\n")
+					print ("Press R to Retreat, A to Attack, R to Retreat. You have a " + playerItem + ".")
+					print ("It does " + str(itemDamage) + " damage."  + "\n\n")
+					playerinput = raw_input()
+					playerinput = playerinput.lower()
+					clear()
+					
+					if playerinput == 'a':
+									clear()
+									if random.randint(1,2) == 1:
+									  print "You hit the monster!\n\n"
+									  time.sleep(1)
+									  print "You did " + str(itemDamage) + " damage.\n\n"
+									  time.sleep(1)
+									  enemyHealth = enemyHealth - itemDamage
+									  
+									else:
+									  print "You missed the monster.\n\n"
+									  time.sleep(1)
+									
+					if playerinput == 'r': #retreats
+									if random.randint(1,2) == 1:
+									  print "You were able to retreat!"
+									  time.sleep(2)
+									  return pastState
+									
+									else:
+									  print "Retreat failed."
+									  time.sleep(2)
+									  return currentstate
+									  
+					if playerinput != 'a' and playerinput != 'r':
+					  print "Key not recognized."
+					  kpe = True
+					  time.sleep(1)
+					else:
+									kpe = False
+
+		if kpe != True:
+			if random.randint(1, 2) == 1:
+				print "The monster hit you!\n\n"
+				time.sleep(1)
+				print "It did " + str(attackPower) + " damage."
+				playerHealth = playerHealth - attackPower
+				time.sleep(1)
+				status_report(enemyHealth)
+				time.sleep(2)
+
+			else:
+				print "The monster missed.\n\n"
+				time.sleep(1)
+				status_report(enemyHealth)
+				time.sleep(2)
+		
 playerHealth = 10
 playerItem = 'torch'
 playerHealth = 10
@@ -194,4 +223,5 @@ while True:
 		  pastState = currentstate
 		  currentstate = newState
 		else:
-			print("Key not recognized \n\n")
+					print("Key not recognized \n\n")
+					time.sleep(1)
