@@ -153,13 +153,13 @@ while True:
 			
 		if currentstate == "corridor_01":
 			newState = two_room("A dark corridor stretches before you. If it has a end, " +
-			"darkness conceals it. You are likely to be eaten by a Grue.", 
-			returnkey + ", C to Continue", 'r', 'c', "dungeon_01", "Grue")
+			"darkness conceals it. You are likely to be eaten by a grue.", 
+			returnkey + ", C to Continue", 'r', 'c', "dungeon_01", "grue")
 			
-		if currentstate == "Grue":
-			newState = one_room("You have been eaten by a Grue!",
+		if currentstate == "grue":
+			newState = one_room("You have been eaten by a grue!",
 			"Press C to Continue", 'c', "dungeon_01")
-			newState = "Dead"
+			newState = "dead"
 			
 		if currentstate == "dungeon_02":
 			newState = three_room("You are in a dark dungeon, there is a torch on the wall, " +
@@ -180,8 +180,8 @@ while True:
 			
 		if currentstate == "corridor_02":
 			newState = two_room("A dark corridor stretches before you. If it has a end, " +
-			"darkness conceals it. You are likely to be eaten by a Grue.", 
-			returnkey + ", C to Continue", 'r', 'c', "dungeon_02", "Grue")
+			"darkness conceals it. You are likely to be eaten by a grue.", 
+			returnkey + ", C to Continue", 'r', 'c', "dungeon_02", "grue")
 			
 		if currentstate == "dungeon_03":
 			newState = three_room("The dungeon burns slightly brighter with the light of your torch.",
@@ -194,7 +194,7 @@ while True:
 			chestPoint = True
 			
 		if currentstate == "torch_03":
-			newState = one_room("Yep, still burning, but it might not burn forever, and the the Grues will come out",
+			newState = one_room("Yep, still burning, but it might not burn forever, and the the grues will come out",
 			returnkey, 'r', "dungeon_03")
 			
 		if currentstate == "door_03":
@@ -207,6 +207,7 @@ while True:
 			
 		if currentstate == 'gremlin1':
 			newState = gremlin("It is dirty.", 'grue', 1)
+			print newState
 		
 		#below this line is basic mechanincs
 		
