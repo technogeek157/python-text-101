@@ -1,14 +1,18 @@
 import random, time 
 global currentstate
-global keyDict
 global newState
 newState = ""
 returnkey = "Press R to Return"
 chestPoint = False
-global playerHealth, playerItem
+
+global playerHealth, playerItem, pastState, itemDamage, enemyHealth
 
 def clear():
 	print "\n" * 1000
+
+def status_report(h):
+	print "You have " + str(playerHealth) + ' health.'
+	print "The monster has " + str(h) + " health."
 
 def one_room(situation, gotos, keyOne, gotoOne):
 		clear()
@@ -28,8 +32,10 @@ def two_room(situation, gotos, keyOne, keyTwo, gotoOne, gotoTwo):
 		playerinput = playerinput.lower()
 		if playerinput == keyOne:
 				return gotoOne
+			    
 		elif playerinput == keyTwo:
 			return gotoTwo
+		    
 		else:
 			return("kpe")
 
@@ -47,57 +53,79 @@ def three_room(situation, gotos, keyOne, keyTwo, keyThree, gotoOne, gotoTwo, got
 		else:
 			return("kpe")
 			
-def gremlin(description, p, c, level, health):
+def gremlin(description, p, level):
+	global playerHealth, currentstate
 	clear()
-	currentHealth = health
-	attackPower = 2
-	fighting = False
 	enemyHealth = 5 * level
-	print ("You have come across a gremlin. " + description + " It has " + 
-	str(enemyHealth) + " health." + "\n\n")
-	print ("Press R to Retreat, A to Attack, you have a " + playerItem + "\n\n")
- 
+	attackPower = 1 * level
 	while True:
-	 if enemyHealth == 0:
-	 	print "You killed the monster!"
-	 	return p
-	 
-	 playerinput = raw_input("Your turn.")
-	 playerinput = playerinput.lower()
-	 clear()
-	 
-	 if playerinput == 'r':
-	 	if random.randint(1, 2) == 1:
-	 		print "\nRetreated!"
-	 		time.sleep(3)
-			return c
-		
-		else:
-			print "\nFailed to retreat"
+		if playerHealth <= 0: #player death
+			print "\nYou lost all of your health."
+			time.sleep(2)
+			return "dead"
 			
-	 elif playerinput == 'a':
-			if random.randint(1, 2) == 1:
-				print "\nYou hit the monster!"
-				enemyHealth = enemyHealth - 1
+		elif enemyHealth <=0: #monster death
+			print "\nYou defeated the monster."
+			time.sleep(2)
+			return p
+
+			
+		else:
+			clear()
+			print ("You have come across a gremlin. " + description + " It has " + str(enemyHealth) + " health." + "\n\n")
+			print ("Press R to Retreat, A to Attack, R to Retreat. You have a " + playerItem + ".")
+			print ("It does " + str(itemDamage) + " damage."  + "\n\n")
+			playerinput = raw_input()
+			playerinput = playerinput.lower()
+			clear()
+			
+			if playerinput == 'a':
+				clear()
+				if random.randint(1,2) == 1:
+				  print "You hit the monster!\n\n"
+				  time.sleep(1)
+				  print "You did " + str(itemDamage) + " damage.\n\n"
+				  time.sleep(1)
+				  enemyHealth = enemyHealth - itemDamage
+				  
+				else:
+				  print "You missed the monster.\n\n"
+				  time.sleep(1)
+							
+			if playerinput == 'r': #retreats
+				if random.randint(1,2) == 1:
+				  print "You were able to retreat!"
+				  time.sleep(2)
+				  return pastState
 				
+				else:
+				  print "Retreat failed."
+				  time.sleep(2)
+				  return currentstate
+							  
+			if playerinput != 'a' and playerinput != 'r':
+			  print "Key not recognized."
+			  kpe = True
+			  time.sleep(1)
 			else:
-				print "\nYou missed."
-				
-	 print "\nYou have " + str(playerHealth) + " health. \nThe monster has " + str(enemyHealth) + " health.\n"
-	 
-	 desicion = random.randint(1,2)
-	 
-	 time.sleep(1)
-	 
-	 if desicion == 1:
-	 	print("The monster hit you.")
-	 	print("You lost " + str(attackPower) + " health.")
-	 	health = health - attackPower
-	 	print("You have " + str(health) + " health.\n\n")
-	 	
-	 else:
-	 	print("The monster missed.")
-	 	
+							kpe = False
+
+		if kpe != True:
+			if random.randint(1, 2) == 1:
+				print "The monster hit you!\n\n"
+				time.sleep(1)
+				print "It did " + str(attackPower) + " damage."
+				playerHealth = playerHealth - attackPower
+				time.sleep(1)
+				status_report(enemyHealth)
+				time.sleep(2)
+
+			else:
+				print "The monster missed.\n\n"
+				time.sleep(1)
+				status_report(enemyHealth)
+				time.sleep(2)
+		
 playerHealth = 10
 playerItem = 'torch'
 playerHealth = 10
@@ -111,7 +139,7 @@ while True:
 			"a chest in the corner, and a closed wood and iron door leading out.",
 			"Hit C to look at the Chest, T to look at the Torch, and D to try the Door",
 			'c', 't', 'd', "chest_01", "torch_01", "door_01")
-			
+
 		if currentstate == "chest_01":
 			newState = two_room("Mostly empty, but a unlit torch lies in the bottom.",
 			returnkey + ", T to Take the torch", 'r', 't', "dungeon_01", "dungeon_02")
@@ -125,13 +153,13 @@ while True:
 			
 		if currentstate == "corridor_01":
 			newState = two_room("A dark corridor stretches before you. If it has a end, " +
-			"darkness conceals it. You are likely to be eaten by a Grue.", 
-			returnkey + ", C to Continue", 'r', 'c', "dungeon_01", "Grue")
+			"darkness conceals it. You are likely to be eaten by a grue.", 
+			returnkey + ", C to Continue", 'r', 'c', "dungeon_01", "grue")
 			
-		if currentstate == "Grue":
-			newState = one_room("You have been eaten by a Grue!",
+		if currentstate == "grue":
+			newState = one_room("You have been eaten by a grue!",
 			"Press C to Continue", 'c', "dungeon_01")
-			newState = "Dead"
+			newState = "dead"
 			
 		if currentstate == "dungeon_02":
 			newState = three_room("You are in a dark dungeon, there is a torch on the wall, " +
@@ -152,8 +180,8 @@ while True:
 			
 		if currentstate == "corridor_02":
 			newState = two_room("A dark corridor stretches before you. If it has a end, " +
-			"darkness conceals it. You are likely to be eaten by a Grue.", 
-			returnkey + ", C to Continue", 'r', 'c', "dungeon_02", "Grue")
+			"darkness conceals it. You are likely to be eaten by a grue.", 
+			returnkey + ", C to Continue", 'r', 'c', "dungeon_02", "grue")
 			
 		if currentstate == "dungeon_03":
 			newState = three_room("The dungeon burns slightly brighter with the light of your torch.",
@@ -166,7 +194,7 @@ while True:
 			chestPoint = True
 			
 		if currentstate == "torch_03":
-			newState = one_room("Yep, still burning, but it might not burn forever, and the the Grues will come out",
+			newState = one_room("Yep, still burning, but it might not burn forever, and the the grues will come out",
 			returnkey, 'r', "dungeon_03")
 			
 		if currentstate == "door_03":
@@ -178,7 +206,8 @@ while True:
 			", C to Continue", 'r', 'c', "dungeon_03", "gremlin1")
 			
 		if currentstate == 'gremlin1':
-			newState = gremlin("It is dirty.", 'eol', 'corridor_03', 1, playerHealth)
+			newState = gremlin("It is dirty.", 'grue', 1)
+			print newState
 		
 		#below this line is basic mechanincs
 		
@@ -192,6 +221,8 @@ while True:
 			itemDamage = 1
 			
 		if newState != "kpe":
-			currentstate = newState
+		  pastState = currentstate
+		  currentstate = newState
 		else:
 			print("Key not recognized \n\n")
+			time.sleep(1)
