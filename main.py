@@ -211,7 +211,7 @@ while True:
 
 		if currentstate == "sword_room_1":
 			newState = one_room("There is a obvious reason for the gremlin's presence. Thre is a chest in front with a sheithed sword poking out. The gremlin was pulling it out when you walked in",
-					    'Press P to Pick Up the sword', 'c', 'sword_room_2')
+					    'Press P to Pick Up the sword', 'p', 'sword_room_2')
 
 		if currentstate == "sword_room_2":
 			#this is an example of a player picking up a item
