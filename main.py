@@ -31,7 +31,7 @@ def two_room(situation, gotos, keyOne, keyTwo, gotoOne, gotoTwo):
 		playerinput = raw_input()
 		playerinput = playerinput.lower()
 		if playerinput == keyOne:
-				return gotoOne
+			return gotoOne
 			    
 		elif playerinput == keyTwo:
 			return gotoTwo
@@ -206,10 +206,21 @@ while True:
 			", C to Continue", 'r', 'c', "dungeon_03", "gremlin1")
 			
 		if currentstate == 'gremlin1':
-			newState = gremlin("It is dirty.", 'grue', 1)
+			newState = gremlin("It is dirty.", 'sword_room_1', 1)
 			print newState
+
+		if currentstate == "sword_room_1":
+			newState = one_room("There is a obvious reason for the gremlin's presence. Thre is a chest in front with a sheithed sword poking out. The gremlin was pulling it out when you walked in",
+					    'Press P to Pick Up the sword', 'c', 'sword_room_2')
+
+		if currentstate == "sword_room_2":
+			#this is an example of a player picking up a item
+			playerItem = "Rusted Sword"
+			itemDamage = 3
+
+			newState = 'kpe'
 		
-		#below this line is basic mechanincs
+		#below this line is basic mechanincs: death, unrecongnized keys, assigning states, ect.
 		
 		if currentstate =="dead":
 			newState = one_room("You have Died! Try again?", "Press R to Retry!", 'r', 'dungeon_01')
