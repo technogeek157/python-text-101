@@ -16,7 +16,7 @@ def inventory():
 def clear():
         print "\n" * 1000
 
-def monster_step():
+def monster_step(returnTo, ):
     if playerinput == 'a':
         clear()
         if random.randint(1,2) == 1:
@@ -34,7 +34,7 @@ def monster_step():
         if random.randint(1,2) == 1:
         print "You were able to retreat!"
         time.sleep(2)
-        return f
+        return returnTo
         
     else:
         print "Retreat failed."
