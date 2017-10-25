@@ -13,9 +13,73 @@ def inventory():
         time.sleep(4)
         return currentstate
                         
-
 def clear():
         print "\n" * 1000
+
+def monster_step():
+    if playerinput == 'a':
+        clear()
+        if random.randint(1,2) == 1:
+            print "You hit the monster!\n\n"
+            time.sleep(1)
+            print "You did " + str(itemDamage) + " damage.\n\n"
+            time.sleep(1)
+            enemyHealth = enemyHealth - itemDamage
+          
+        else:
+            print "You missed the monster.\n\n"
+            time.sleep(1)
+                                
+    if playerinput == 'r': #retreats
+        if random.randint(1,2) == 1:
+        print "You were able to retreat!"
+        time.sleep(2)
+        return f
+        
+    else:
+        print "Retreat failed."
+        time.sleep(2)
+
+        if random.randint(1, 2) == 1:
+            print "The monster hit you!\n\n"
+            time.sleep(1)
+            print "It did " + str(attackPower) + " damage.\n\n"
+            playerHealth = playerHealth - attackPower
+            time.sleep(1)
+            status_report(enemyHealth)
+            time.sleep(2)
+
+        else:
+            print "The monster missed.\n\n"
+            time.sleep(1)
+            status_report(enemyHealth)
+            time.sleep(2)
+            
+            return currentstate
+                                  
+        if playerinput != 'a' and playerinput != 'r':
+            print "Key not recognized."
+            kpe = True
+            time.sleep(1)
+
+        else:
+            kpe = False
+
+        if kpe != True:
+            if random.randint(1, 2) == 1:
+                print "The monster hit you!\n\n"
+                time.sleep(1)
+                print "It did " + str(attackPower) + " damage.\n\n"
+                playerHealth = playerHealth - attackPower
+                time.sleep(1)
+                status_report(enemyHealth)
+                time.sleep(2)
+
+            else:
+                print "The monster missed.\n\n"
+                time.sleep(1)
+                status_report(enemyHealth)
+                time.sleep(2)
 
 def status_report(h):
         print "You have " + str(playerHealth) + ' health.'
@@ -28,7 +92,6 @@ def one_room(situation, gotos, keyOne, gotoOne):
                 playerinput = playerinput.lower()
                 if playerinput == keyOne:
                                 return gotoOne
-                                print gotoOne
 
                 elif playerinput == 'i':
                         return inventory()
@@ -115,53 +178,10 @@ def gremlin(description, f, p, level):
                         playerinput = raw_input()
                         playerinput = playerinput.lower()
                         clear()
+
+                        monster_step()
                         
-                        if playerinput == 'a':
-                                clear()
-                                if random.randint(1,2) == 1:
-                                  print "You hit the monster!\n\n"
-                                  time.sleep(1)
-                                  print "You did " + str(itemDamage) + " damage.\n\n"
-                                  time.sleep(1)
-                                  enemyHealth = enemyHealth - itemDamage
-                                  
-                                else:
-                                  print "You missed the monster.\n\n"
-                                  time.sleep(1)
-                                                        
-                        if playerinput == 'r': #retreats
-                                if random.randint(1,2) == 1:
-                                  print "You were able to retreat!"
-                                  time.sleep(2)
-                                  return f
-                                
-                                else:
-                                  print "Retreat failed."
-                                  time.sleep(2)
-                                  return currentstate
-                                                          
-                        if playerinput != 'a' and playerinput != 'r':
-                          print "Key not recognized."
-                          kpe = True
-                          time.sleep(1)
-                        else:
-                                                        kpe = False
 
-                if kpe != True:
-                        if random.randint(1, 2) == 1:
-                                print "The monster hit you!\n\n"
-                                time.sleep(1)
-                                print "It did " + str(attackPower) + " damage.\n\n"
-                                playerHealth = playerHealth - attackPower
-                                time.sleep(1)
-                                status_report(enemyHealth)
-                                time.sleep(2)
-
-                        else:
-                                print "The monster missed.\n\n"
-                                time.sleep(1)
-                                status_report(enemyHealth)
-                                time.sleep(2)
 def troll(description, f, p, level):
         global playerHealth, currentstate, pastState
         clear()
