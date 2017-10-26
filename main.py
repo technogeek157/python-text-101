@@ -5,12 +5,11 @@ newState = ""
 returnkey = "Press R to Return"
 chestPoint = False
 
-global playerHealth, playerItem, pastState, itemDamage, enemyHealth, playerTreasure, maxHealth
+global playerHealth, playerItem, pastState, itemDamage, enemyHealth, playerTreasure
 
 def inventory():
         print("\n\nYou have " + str(playerTreasure) + " Gold, and a " + playerItem + ". It does " + str(itemDamage) + " damage.")
-        print("You have " + str(playerHealth) + " health. Your max health is " + str(maxHealth) + '.')
-        time.sleep(4)
+        time.sleep(2)
         return currentstate
                         
 def clear():
@@ -152,9 +151,8 @@ def treasure_room(situation, gotos, keyOne, gotoOne, treasure):
                 else:
                                 return("kpe")
                         
-def gremlin(description, f, p, level):
-        global playerHealth, currentstate, pastState
-        pastState = currentstate
+def gremlin(description, p, level):
+        global playerHealth, currentstate
         clear()
         enemyHealth = 5 * level
         attackPower = 1 * level
@@ -178,14 +176,57 @@ def gremlin(description, f, p, level):
                         playerinput = raw_input()
                         playerinput = playerinput.lower()
                         clear()
+<<<<<<< HEAD
+=======
+                        
+                        if playerinput == 'a':
+                                clear()
+                                if random.randint(1,2) == 1:
+                                  print "You hit the monster!\n\n"
+                                  time.sleep(1)
+                                  print "You did " + str(itemDamage) + " damage.\n\n"
+                                  time.sleep(1)
+                                  enemyHealth = enemyHealth - itemDamage
+                                  
+                                else:
+                                  print "You missed the monster.\n\n"
+                                  time.sleep(1)
+                                                        
+                        if playerinput == 'r': #retreats
+                                if random.randint(1,2) == 1:
+                                  print "You were able to retreat!"
+                                  time.sleep(2)
+                                  return pastState
+                                
+                                else:
+                                  print "Retreat failed."
+                                  time.sleep(2)
+                                  return currentstate
+                                                          
+                        if playerinput != 'a' and playerinput != 'r':
+                          print "Key not recognized."
+                          kpe = True
+                          time.sleep(1)
+                        else:
+                                                        kpe = False
+>>>>>>> parent of f6a3805... fixed bugs with TBC + added health healing
 
                         monster_step()
                         
 
+<<<<<<< HEAD
 def troll(description, f, p, level):
         global playerHealth, currentstate, pastState
+=======
+                        else:
+                                print "The monster missed.\n\n"
+                                time.sleep(1)
+                                status_report(enemyHealth)
+                                time.sleep(2)
+def troll(description, p, level):
+        global playerHealth, currentstate
+>>>>>>> parent of f6a3805... fixed bugs with TBC + added health healing
         clear()
-        pastState = currentstate
         enemyHealth = 10 * level
         attackPower = 3 * level
         while True:
@@ -226,7 +267,7 @@ def troll(description, f, p, level):
                                 if random.randint(1,2) == 1:
                                   print "You were able to retreat!"
                                   time.sleep(2)
-                                  return f
+                                  return pastState
                                 
                                 else:
                                   print "Retreat failed."
@@ -336,7 +377,7 @@ while True:
                         ", C to Continue", 'r', 'c', "dungeon_03", "gremlin1")
                         
                 if currentstate == 'gremlin1':
-                        newState = gremlin("It is dirty.", 'corridor_03', 'sword_room_1', 1)
+                        newState = gremlin("It is dirty.", 'sword_room_1', 1)
                         print newState
 
                 if currentstate == "sword_room_1":
@@ -361,7 +402,7 @@ while True:
                         newState = one_room("Oops, this is a dead end. You will find several of these on your adventures.", returnkey, 'r', 'sword_room_3')
 
                 if currentstate == "troll_1":
-                        newState = troll("It towers above you.", 'sword_room_3', 'eol', 1)
+                        newState = troll("It towers above you.", 'eol', 1)
 
                 #below this line is basic mechanincs: death, unrecongnized keys, assigning states, ect.
                 if currentstate =="dead":
@@ -377,9 +418,6 @@ while True:
                 if newState != "kpe":
                   pastState = currentstate
                   currentstate = newState
-                  if playerHealth < maxHealth:
-                          playerHealth = playerHealth + 1
-
                 else:
                         print("Key not recognized \n\n")
                         time.sleep(1)
