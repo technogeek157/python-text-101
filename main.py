@@ -15,7 +15,7 @@ def inventory():
                         
 
 def clear():
-        print "\n" * 1000
+    print "\n" * 1000
 
 def status_report(h):
         print "You have " + str(playerHealth) + ' health.'
@@ -105,7 +105,6 @@ def gremlin(description, f, p, level):
                         print "\nYou defeated the monster."
                         time.sleep(2)
                         return p
-
                         
                 else:
                         clear()
@@ -131,14 +130,13 @@ def gremlin(description, f, p, level):
                                                         
                         if playerinput == 'r': #retreats
                                 if random.randint(1,2) == 1:
-                                  print "You were able to retreat!"
-                                  time.sleep(2)
-                                  return f
-                                
+                                    print "You were able to retreat!"
+                                    time.sleep(2)
+                                    return f
+
                                 else:
-                                  print "Retreat failed."
-                                  time.sleep(2)
-                                  return currentstate
+                                    print "Retreat failed."
+                                    time.sleep(1)
                                                           
                         if playerinput != 'a' and playerinput != 'r':
                           print "Key not recognized."
@@ -162,6 +160,7 @@ def gremlin(description, f, p, level):
                                 time.sleep(1)
                                 status_report(enemyHealth)
                                 time.sleep(2)
+
 def troll(description, f, p, level):
         global playerHealth, currentstate, pastState
         clear()
