@@ -117,7 +117,7 @@ def treasure_room(situation, treasure):
                     inventoryCheat = True
                     return("kpe")
                         
-def knoll(description, f, p, level):
+def monster(name, description, f, p, level):
         global playerHealth, currentstate, pastState
         pastState = currentstate
         clear()
@@ -136,7 +136,7 @@ def knoll(description, f, p, level):
                         
                 else:
                         clear()
-                        print ("You have come across a knoll. " + description + " It has " + str(enemyHealth) + " health." + "\n\n")
+                        print ("You have come across a " + name + ". " + description + " It has " + str(enemyHealth) + " health." + "\n\n")
                         print ("Press R to Retreat, A to Attack, R to Retreat. You have a " + playerItem + ".")
                         print ("It does " + str(itemDamage) + " damage."  + "\n\n")
                         playerinput = raw_input()
@@ -189,77 +189,6 @@ def knoll(description, f, p, level):
                                 status_report(enemyHealth)
                                 time.sleep(2)
 
-def goblin(description, f, p, level):
-        global playerHealth, currentstate, pastState
-        pastState = currentstate
-        clear()
-        enemyHealth = 10 * level
-        attackPower = 1 * level
-        while True:
-                if playerHealth <= 0: #player death
-                        print "\nYou lost all of your health."
-                        time.sleep(2)
-                        return "dead"
-                        
-                elif enemyHealth <=0: #monster death
-                        print "\nYou defeated the monster."
-                        time.sleep(2)
-                        return p
-                        
-                else:
-                        clear()
-                        print ("You have come across a goblin. " + description + " It has " + str(enemyHealth) + " health." + "\n\n")
-                        print ("Press R to Retreat, A to Attack, R to Retreat. You have a " + playerItem + ".")
-                        print ("It does " + str(itemDamage) + " damage."  + "\n\n")
-                        playerinput = raw_input()
-                        playerinput = playerinput.lower()
-                        clear()
-                        
-                        if playerinput == 'a':
-                                clear()
-                                if random.randint(1,2) == 1:
-                                  print "You hit the monster!\n\n"
-                                  time.sleep(1)
-                                  print "You did " + str(itemDamage) + " damage.\n\n"
-                                  time.sleep(1)
-                                  enemyHealth = enemyHealth - itemDamage
-                                  
-                                else:
-                                  print "You missed the monster.\n\n"
-                                  time.sleep(1)
-                                                        
-                        if playerinput == 'r': #retreats
-                                if random.randint(1,2) == 1:
-                                    print "You were able to retreat!"
-                                    time.sleep(2)
-                                    return f
-
-                                else:
-                                    print "Retreat failed."
-                                    time.sleep(1)
-                                                          
-                        if playerinput != 'a' and playerinput != 'r':
-                          print "Key not recognized."
-                          kpe = True
-                          time.sleep(1)
-                        else:
-                                                        kpe = False
-
-                if kpe != True:
-                        if random.randint(1, 2) == 1:
-                                print "The monster hit you!\n\n"
-                                time.sleep(1)
-                                print "It did " + str(attackPower) + " damage.\n\n"
-                                playerHealth = playerHealth - attackPower
-                                time.sleep(1)
-                                status_report(enemyHealth)
-                                time.sleep(2)
-
-                        else:
-                                print "The monster missed.\n\n"
-                                time.sleep(1)
-                                status_report(enemyHealth)
-                                time.sleep(2)
 playerHealth = 10
 playerItem = 'torch'
 playerHealth = 10
@@ -342,7 +271,7 @@ while True:
             ", C to Continue", 'r', 'c', "dungeon_03", "gremlin_1")
             
     if currentstate == 'gremlin_1':
-            newState = knoll("It is dirty.", 'corridor_03', 'sword_room_1', 1)
+            newState = monster('Knoll', "It is dirty.", 'corridor_03', 'sword_room_1', 1)
             print newState
 
     if currentstate == "sword_room_1":
@@ -364,12 +293,26 @@ while True:
             newState = treasure_room("Good Job! This room contains a small box with treasure inside!", 100)
 
     if currentstate == "dead_end_1":
-            newState = one_room("Oops, this is a dead end. You will find several of these on your adventures.", returnkey, 'r', 'sword_room_3')
+            newState = one_room("Oops, this is a dead end. You will find several of these on your adventures.", returnkey, 
+                'r', 'sword_room_3')
 
     if currentstate == "goblin_1":
-            newState = goblin("That looks like a big club....", 'sword_room_3', 'eol', 1)
+            newState = monster('Goblin', "That looks like a big club....", 'sword_room_3', 'tutorial_1', 1)
+
+    if currentstate == 'tutorial_1':
+        newState = one_room("Well, at this point you probably have taken some damage. Don't worry, as you move through " +
+            "rooms, you will heal.", "Press C to Continue", 'c', 'tutorial_2')
+
+    if currentstate == 'tutorial_2':
+        newState = one_room("Well, that's the end of the tutorial. I'll write out a end later, perhaps being tossed " +
+            "into the bottomless abyss and then waking up. Either way, after this, it will be a proceduraly generated " +
+            "world, maybe(or I'll just write out a actual story). Anyway, for now I'll make it nice and clean and kill you off",
+            "Press D to Die.", 'd', 'dead')
 
     #below this line is basic mechanincs: death, unrecongnized keys, assigning states, ect.
+    if playerHealth <= 0:
+        newState = one_room("You ran out of health.", "Press C to Continue", 'c', 'dead')
+
     if currentstate =="dead":
             newState = one_room("You have Died! Try again?", "Press R to Retry!", 'r', 'dungeon_01')
             playerHealth = 10
