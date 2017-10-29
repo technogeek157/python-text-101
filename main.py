@@ -5,13 +5,19 @@ newState = ""
 returnkey = "Press R to Return"
 chestPoint = False
 
-global playerHealth, playerItem, pastState, itemDamage, enemyHealth, playerTreasure, maxHealth
+global playerHealth, playerItem, pastState, itemDamage, enemyHealth, playerTreasure, maxHealth, inventoryCheat, treasure_list
+
+treasure_list = []
+
+inventoryCheat = False
 
 def inventory():
-        print("\n\nYou have " + str(playerTreasure) + " Gold, and a " + playerItem + ". It does " + str(itemDamage) + " damage.")
-        print("You have " + str(playerHealth) + " health. Your max health is " + str(maxHealth) + '.')
-        time.sleep(4)
-        return currentstate
+    global playerHealth
+    print("\n\nYou have " + str(playerTreasure) + " Gold, and a " + playerItem + ". It does " + str(itemDamage) + " damage.")
+    print("You have " + str(playerHealth) + " health. Your max health is " + str(maxHealth) + '.')
+    time.sleep(4)
+    playerHealth = playerHealth - 1
+    return currentstate
                         
 
 def clear():
@@ -20,6 +26,11 @@ def clear():
 def status_report(h):
         print "You have " + str(playerHealth) + ' health.'
         print "The monster has " + str(h) + " health."
+
+def looted():
+    for i in treasure_list:
+        if i == currentstate:
+            return True
 
 def one_room(situation, gotos, keyOne, gotoOne):
                 clear()
@@ -72,24 +83,41 @@ def three_room(situation, gotos, keyOne, keyTwo, keyThree, gotoOne, gotoTwo, got
                 else:
                         return("kpe")
 
-def treasure_room(situation, gotos, keyOne, gotoOne, treasure):
+def treasure_room(situation, treasure):
                 clear()
+                global inventoryCheat
                 global playerTreasure
+                global treasure_list
+
                 if playerTreasure == 0:
-                        tNotification = "\n\nFrom now on, press I to view your inventory!"
+                    tNotification = "\n\nFrom now on, press I to view your inventory!"
                 else:
-                        tNotification = ''
-                print("\n\n" + situation + "\n\nThe room contains " + str(treasure) + " treasure.\n\n" + gotos + tNotification)
-                playerTreasure = playerTreasure + treasure
+                    tNotification = ''
+                print("\n\n" + situation + "\n\nThe room contains " + str(treasure) + " treasure.\n\n" + 
+                "Press R to Return" + tNotification)
+
+                if inventoryCheat == False:
+                    playerTreasure = playerTreasure + treasure
+
+                if looted() == True:
+                    time.sleep(1)
+                    print "\n\nBut you don't get any, cheater!"
+                    print "Press R to Return in Shame"
+
+                else:
+                    treasure_list.append(currentstate)
+
                 playerinput = raw_input()
                 playerinput = playerinput.lower()
-                if playerinput == keyOne:
-                                return gotoOne
-                                print gotoOne
+
+                if playerinput == 'r':
+                    return pastState
+
                 else:
-                                return("kpe")
+                    inventoryCheat = True
+                    return("kpe")
                         
-def gremlin(description, f, p, level):
+def knoll(description, f, p, level):
         global playerHealth, currentstate, pastState
         pastState = currentstate
         clear()
@@ -108,7 +136,7 @@ def gremlin(description, f, p, level):
                         
                 else:
                         clear()
-                        print ("You have come across a gremlin. " + description + " It has " + str(enemyHealth) + " health." + "\n\n")
+                        print ("You have come across a knoll. " + description + " It has " + str(enemyHealth) + " health." + "\n\n")
                         print ("Press R to Retreat, A to Attack, R to Retreat. You have a " + playerItem + ".")
                         print ("It does " + str(itemDamage) + " damage."  + "\n\n")
                         playerinput = raw_input()
@@ -161,12 +189,12 @@ def gremlin(description, f, p, level):
                                 status_report(enemyHealth)
                                 time.sleep(2)
 
-def troll(description, f, p, level):
+def goblin(description, f, p, level):
         global playerHealth, currentstate, pastState
-        clear()
         pastState = currentstate
+        clear()
         enemyHealth = 10 * level
-        attackPower = 3 * level
+        attackPower = 1 * level
         while True:
                 if playerHealth <= 0: #player death
                         print "\nYou lost all of your health."
@@ -177,11 +205,10 @@ def troll(description, f, p, level):
                         print "\nYou defeated the monster."
                         time.sleep(2)
                         return p
-
                         
                 else:
                         clear()
-                        print ("You have come across a troll. " + description + " It has " + str(enemyHealth) + " health." + "\n\n")
+                        print ("You have come across a goblin. " + description + " It has " + str(enemyHealth) + " health." + "\n\n")
                         print ("Press R to Retreat, A to Attack, R to Retreat. You have a " + playerItem + ".")
                         print ("It does " + str(itemDamage) + " damage."  + "\n\n")
                         playerinput = raw_input()
@@ -203,14 +230,13 @@ def troll(description, f, p, level):
                                                         
                         if playerinput == 'r': #retreats
                                 if random.randint(1,2) == 1:
-                                  print "You were able to retreat!"
-                                  time.sleep(2)
-                                  return f
-                                
+                                    print "You were able to retreat!"
+                                    time.sleep(2)
+                                    return f
+
                                 else:
-                                  print "Retreat failed."
-                                  time.sleep(2)
-                                  return currentstate
+                                    print "Retreat failed."
+                                    time.sleep(1)
                                                           
                         if playerinput != 'a' and playerinput != 'r':
                           print "Key not recognized."
@@ -241,124 +267,126 @@ maxHealth = 10
 currentstate = "dungeon_01"
 itemDamage = 1
 playerTreasure = 0
+treasure_list = []
 
 while True:
-                if currentstate == "dungeon_01":
-                        newState = three_room("You are in a dark dungeon, there is a torch on the wall, " +
+    if currentstate == "dungeon_01":
+        newState = three_room("You are in a dark dungeon, there is a torch on the wall, " +
                         "a chest in the corner, and a closed wood and iron door leading out.",
                         "Hit C to look at the Chest, T to look at the Torch, and D to try the Door",
                         'c', 't', 'd', "chest_01", "torch_01", "door_01")
 
-                if currentstate == "chest_01":
-                        newState = two_room("Mostly empty, but a unlit torch lies in the bottom.",
-                        returnkey + ", T to Take the torch", 'r', 't', "dungeon_01", "dungeon_02")
-                        
-                if currentstate == "torch_01":
-                        newState = one_room("A lit torch.", returnkey, 'r', "dungeon_01")
-                        
-                if currentstate == "door_01":
-                        newState = two_room("An old dungeon door. It appears to be unlocked.",
-                        returnkey + ", C to Continue", 'r', 'c', "dungeon_01", "corridor_01")
-                        
-                if currentstate == "corridor_01":
-                        newState = two_room("A dark corridor stretches before you. If it has a end, " +
-                        "darkness conceals it. You are likely to be eaten by a grue.", 
-                        returnkey + ", C to Continue", 'r', 'c', "dungeon_01", "grue")
-                        
-                if currentstate == "grue":
-                        newState = one_room("You have been eaten by a grue!",
-                        "Press C to Continue", 'c', "dungeon_01")
-                        newState = "dead"
-                        
-                if currentstate == "dungeon_02":
-                        newState = three_room("You are in a dark dungeon, there is a torch on the wall, " +
-                        "a chest in the corner, and a closed wood and iron door leading out. You have a unlit torch in your hand",
-                        "Press C to look at the Chest, T to look at the Torch, and D to look at the Door", 
-                        'c', 't', 'd', "chest_02", "torch_02", "door_02")
-                        
-                if currentstate == "chest_02":
-                        newState = one_room("Nope, nothing here.", returnkey, 'r', "dungeon_02")
-                                 
-                if currentstate == "door_02":
-                        newState = two_room("An old dungeon door. It appears to be unlocked.",
-                        returnkey + ", C to Continue", 'r', 'c', "dungeon_02", "corridor_02")
-                        
-                if currentstate == "torch_02":
-                        newState = two_room("Well, are you just going to stand there, or light the torch?", 
-                        returnkey + ", L to Light your torch.", 'r', 'l', 'dungeon_02', 'dungeon_03')
-                        
-                if currentstate == "corridor_02":
-                        newState = two_room("A dark corridor stretches before you. If it has a end, " +
-                        "darkness conceals it. You are likely to be eaten by a grue.", 
-                        returnkey + ", C to Continue", 'r', 'c', "dungeon_02", "grue")
-                        
-                if currentstate == "dungeon_03":
-                        newState = three_room("The dungeon burns slightly brighter with the light of your torch.",
-                        "D to try the Door, C to look in the Chest, T to inspect the Torch", 
-                        'd', 'c', 't', 'door_03', "chest_03", "torch_03")
-                        
-                if currentstate == "chest_03":
-                        newState = one_room("Well, aren't you persistent! Here's a bonus point for you!", returnkey,
-                        'r', "dungeon_03")
-                        chestPoint = True
-                        
-                if currentstate == "torch_03":
-                        newState = one_room("Yep, still burning, but it might not burn forever, and the the grues will come out",
-                        returnkey, 'r', "dungeon_03")
-                        
-                if currentstate == "door_03":
-                        newState = two_room("An old dungeon door. It appears to be unlocked.",
-                        returnkey + ", C to Continue", 'r', 'c', "dungeon_03", "corridor_03")
-                        
-                if currentstate == "corridor_03":
-                        newState = two_room("At the end of the corridor, there is a door, set in stone.", returnkey + 
-                        ", C to Continue", 'r', 'c', "dungeon_03", "gremlin1")
-                        
-                if currentstate == 'gremlin1':
-                        newState = gremlin("It is dirty.", 'corridor_03', 'sword_room_1', 1)
-                        print newState
+    if currentstate == "chest_01":
+            newState = two_room("Mostly empty, but a unlit torch lies in the bottom.",
+            returnkey + ", T to Take the torch", 'r', 't', "dungeon_01", "dungeon_02")
+            
+    if currentstate == "torch_01":
+            newState = one_room("A lit torch.", returnkey, 'r', "dungeon_01")
+            
+    if currentstate == "door_01":
+            newState = two_room("An old dungeon door. It appears to be unlocked.",
+            returnkey + ", C to Continue", 'r', 'c', "dungeon_01", "corridor_01")
+            
+    if currentstate == "corridor_01":
+            newState = two_room("A dark corridor stretches before you. If it has a end, " +
+            "darkness conceals it. You are likely to be eaten by a grue.", 
+            returnkey + ", C to Continue", 'r', 'c', "dungeon_01", "grue")
+            
+    if currentstate == "grue":
+            newState = one_room("You have been eaten by a grue!",
+            "Press C to Continue", 'c', "dungeon_01")
+            newState = "dead"
+            
+    if currentstate == "dungeon_02":
+            newState = three_room("You are in a dark dungeon, there is a torch on the wall, " +
+            "a chest in the corner, and a closed wood and iron door leading out. You have a unlit torch in your hand",
+            "Press C to look at the Chest, T to look at the Torch, and D to look at the Door", 
+            'c', 't', 'd', "chest_02", "torch_02", "door_02")
+            
+    if currentstate == "chest_02":
+            newState = one_room("Nope, nothing here.", returnkey, 'r', "dungeon_02")
+                     
+    if currentstate == "door_02":
+            newState = two_room("An old dungeon door. It appears to be unlocked.",
+            returnkey + ", C to Continue", 'r', 'c', "dungeon_02", "corridor_02")
+            
+    if currentstate == "torch_02":
+            newState = two_room("Well, are you just going to stand there, or light the torch?", 
+            returnkey + ", L to Light your torch.", 'r', 'l', 'dungeon_02', 'dungeon_03')
+            
+    if currentstate == "corridor_02":
+            newState = two_room("A dark corridor stretches before you. If it has a end, " +
+            "darkness conceals it. You are likely to be eaten by a grue.", 
+            returnkey + ", C to Continue", 'r', 'c', "dungeon_02", "grue")
+            
+    if currentstate == "dungeon_03":
+            newState = three_room("The dungeon burns slightly brighter with the light of your torch.",
+            "D to try the Door, C to look in the Chest, T to inspect the Torch", 
+            'd', 'c', 't', 'door_03', "chest_03", "torch_03")
+            
+    if currentstate == "chest_03":
+            newState = one_room("Well, aren't you persistent! Here's a bonus point for you!", returnkey,
+            'r', "dungeon_03")
+            chestPoint = True
+            
+    if currentstate == "torch_03":
+            newState = one_room("Yep, still burning, but it might not burn forever, and the the grues will come out",
+            returnkey, 'r', "dungeon_03")
+            
+    if currentstate == "door_03":
+            newState = two_room("An old dungeon door. It appears to be unlocked.",
+            returnkey + ", C to Continue", 'r', 'c', "dungeon_03", "corridor_03")
+            
+    if currentstate == "corridor_03":
+            newState = two_room("At the end of the corridor, there is a door, set in stone.", returnkey + 
+            ", C to Continue", 'r', 'c', "dungeon_03", "gremlin_1")
+            
+    if currentstate == 'gremlin_1':
+            newState = knoll("It is dirty.", 'corridor_03', 'sword_room_1', 1)
+            print newState
 
-                if currentstate == "sword_room_1":
-                        newState = one_room("There is a obvious reason for the gremlin's presence. There is a chest in front with a sheithed sword poking out. The gremlin was pulling it out when you walked in",
-                                            'Press P to Pick Up the sword', 'p', 'sword_room_2')
+    if currentstate == "sword_room_1":
+            newState = one_room("There is a obvious reason for the gremlin's presence. There is a chest in front with a sheithed sword poking out. The gremlin was pulling it out when you walked in",
+                                'Press P to Pick Up the sword', 'p', 'sword_room_2')
 
-                if currentstate == "sword_room_2":
-                        #this is an example of a player picking up a item
-                        playerItem = "Rusted Sword"
-                        itemDamage = 3
+    if currentstate == "sword_room_2":
+            #this is an example of a player picking up a item
+            playerItem = "Rusted Sword"
+            itemDamage = 3
 
-                        newState = one_room("You look at the sword. It is rusted, but should serve it's purpose.", "Press C to Continue", 'c', "sword_room_3")
+            newState = one_room("You look at the sword. It is rusted, but should serve it's purpose.", "Press C to Continue", 'c', "sword_room_3")
 
-                if currentstate == "sword_room_3":
-                        newState = three_room("Looking around, you notice three doors set in the stone a round you.", "Press R to go through the Right Door, " +
-                                              "L to go through the Left Door, C to go through the Center Door.", 'r', 'l', 'c', 'treasure_room_1', "dead_end_1", "troll_1")
+    if currentstate == "sword_room_3":
+            newState = three_room("Looking around, you notice three doors set in the stone a round you.", "Press R to go through the Right Door, " +
+                                  "L to go through the Left Door, C to go through the Center Door.", 'r', 'l', 'c', 'treasure_room_1', "dead_end_1", "goblin_1")
 
-                if currentstate == "treasure_room_1": #here is a room with treasure inside
-                        newState = treasure_room("Good Job! This room contains a small box with treasure inside!", returnkey, 'r', 'sword_room_3', 100)
+    if currentstate == "treasure_room_1": #here is a room with treasure inside
+            newState = treasure_room("Good Job! This room contains a small box with treasure inside!", 100)
 
-                if currentstate == "dead_end_1":
-                        newState = one_room("Oops, this is a dead end. You will find several of these on your adventures.", returnkey, 'r', 'sword_room_3')
+    if currentstate == "dead_end_1":
+            newState = one_room("Oops, this is a dead end. You will find several of these on your adventures.", returnkey, 'r', 'sword_room_3')
 
-                if currentstate == "troll_1":
-                        newState = troll("It towers above you.", 'sword_room_3', 'eol', 1)
+    if currentstate == "goblin_1":
+            newState = goblin("That looks like a big club....", 'sword_room_3', 'eol', 1)
 
-                #below this line is basic mechanincs: death, unrecongnized keys, assigning states, ect.
-                if currentstate =="dead":
-                        newState = one_room("You have Died! Try again?", "Press R to Retry!", 'r', 'dungeon_01')
-                        playerHealth = 10
-                        playerItem = 'torch'
-                        playerHealth = 10
-                        maxHealth = 10
-                        currentstate = "dungeon_01"
-                        itemDamage = 1
-                        playerTreasure = 0
+    #below this line is basic mechanincs: death, unrecongnized keys, assigning states, ect.
+    if currentstate =="dead":
+            newState = one_room("You have Died! Try again?", "Press R to Retry!", 'r', 'dungeon_01')
+            playerHealth = 10
+            playerItem = 'torch'
+            playerHealth = 10
+            maxHealth = 10
+            currentstate = "dungeon_01"
+            itemDamage = 1
+            playerTreasure = 0
+            treasure_list = []
 
-                if newState != "kpe":
-                  pastState = currentstate
-                  currentstate = newState
-                  if playerHealth < maxHealth:
-                          playerHealth = playerHealth + 1
+    if newState != "kpe":
+      pastState = currentstate
+      currentstate = newState
+      if playerHealth < maxHealth:
+              playerHealth = playerHealth + 1
 
-                else:
-                        print("Key not recognized \n\n")
-                        time.sleep(1)
+    else:
+            print("Key not recognized \n\n")
+            time.sleep(1)
