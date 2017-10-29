@@ -1,2 +1,0 @@
-WARNING, SPOLIERS PRESENT
-IF YOU NEED HINTS, HERE WORKS, but you have been warned.
