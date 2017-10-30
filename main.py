@@ -358,7 +358,8 @@ while True:
 
     if currentstate == "sword_room_3":
             newState = three_room("Looking around, you notice three doors set in the stone a round you.", "Press R to go through the Right Door, " +
-                                  "L to go through the Left Door, C to go through the Center Door.", 'r', 'l', 'c', 'treasure_room_1', "dead_end_1", "goblin_1")
+                                  "L to go through the Left Door, C to go through the Center Door.", 'r', 'l', 'c', 'treasure_room_1', "dead_end_1",
+                                   "goblin_1")
 
     if currentstate == "treasure_room_1": #here is a room with treasure inside
             newState = treasure_room("Good Job! This room contains a small box with treasure inside!", 100)
@@ -367,7 +368,16 @@ while True:
             newState = one_room("Oops, this is a dead end. You will find several of these on your adventures.", returnkey, 'r', 'sword_room_3')
 
     if currentstate == "goblin_1":
-            newState = goblin("That looks like a big club....", 'sword_room_3', 'eol', 1)
+            newState = goblin("That looks like a big club....", 'sword_room_3', 'tutorial_1', 1)
+
+    if currentstate == "tutorial_1":
+        newState = one_room("You probably took some damage. Don't worry, you can heal by just moving around. You can check your health with your inventory.",
+            'Press C to Continue.', 'c', 'tutorial_2')
+
+    if currentstate == 'tutorial_2':
+        newState = one_room("Uh oh. A wild wizard appears. His prodigous bulk hangs in the air by a suspending spell. He laughs at you, saying: " +
+            "Nice try, little one! But no one escapes my dungeon. Have fun rotting in the infinate abyss.", 'You blacked out. Press C to Continue',
+            'c', 'abyss_1')
 
     #below this line is basic mechanincs: death, unrecongnized keys, assigning states, ect.
     if currentstate =="dead":
