@@ -379,6 +379,16 @@ while True:
             "Nice try, little one! But no one escapes my dungeon. Have fun rotting in the infinate abyss.", 'You blacked out. Press C to Continue',
             'c', 'abyss_1')
 
+    if currentstate == 'abyss_1':
+        newState = one_room("Nope, just kidding! He just tossed you into another dungeon. This time he locked the door. He also took your sword."
+            , "Press C to Continue",
+            'c', 'abyss_2')
+        playerItem = 'Torch'
+        itemDamage = 1
+
+    if currentstate == 'abyss_2':
+        newState = three_room("There is a three sided room here. The fourth side is bars. There is a small cot here", 
+            "Press S to look at the Sheets, L to look at the Lock, M to lok at the Mirror")
     #below this line is basic mechanincs: death, unrecongnized keys, assigning states, ect.
     if currentstate =="dead":
             newState = one_room("You have Died! Try again?", "Press R to Retry!", 'r', 'dungeon_01')
